@@ -3,12 +3,12 @@ import pandas as pd
 import plotly.express as px
 import dash_bootstrap_components as dbc
 
-gapminder = pd.read_csv("/dashboard/datasets/gapminderData2.csv")
+gapminder = pd.read_csv("dashboard/datasets/gapminderData2.csv")
 scatter_figure = px.scatter(
     gapminder[gapminder.year == 2007], x="bornPerwom", y="gdpPercap"
 )
 
-migrantes = pd.read_excel("/dashboard/datasets/MigrantesChile.xlsx")
+migrantes = pd.read_excel("dashboard/datasets/MigrantesChile.xlsx")
 
 
 def plot_heatmap(data: pd.DataFrame, continent):
