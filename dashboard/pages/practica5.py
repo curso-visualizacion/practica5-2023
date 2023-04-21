@@ -6,7 +6,6 @@ import dash_bootstrap_components as dbc
 register_page(__name__)
 
 gapminder = pd.read_csv("dashboard/datasets/gapminderData2.csv")
-print(gapminder.head())
 
 scatter_figure = px.scatter(
     gapminder[gapminder.year == 2007],
@@ -43,27 +42,37 @@ layout = dbc.Container(
                 ),
             ],
         ),
+        dbc.Row([dbc.Col([html.H1(id="text", children="hola")])]),
     ],
     fluid=True,
 )
 
 
+# @callback(
+#     Output("serie_a", "figure"),
+#     Output("serie_b", "figure"),
+#     Input("id_scatter", "hoverData"),
+# )
+# def update_serie(hover_data):
+#     a_series = "lifeExp"
+#     b_series = "gdpPercap"
+#     if not hover_data:
+#         return (
+#             serie_tiempo("Chile", a_series),
+#             serie_tiempo("Chile", b_series),
+#         )
+#     country = hover_data["points"][0]["hovertext"]
+#     return (
+#         serie_tiempo(country, a_series),
+#         serie_tiempo(country, b_series),
+#     )
+
+
 @callback(
     Output("serie_a", "figure"),
-    Output("serie_b", "figure"),
-    Input("id_scatter", "hoverData"),
+    Input("id_scatter", "selectedData"),
 )
-def update_serie(hover_data):
-    a_series = "lifeExp"
-    b_series = "gdpPercap"
-    if not hover_data:
-        return (
-            serie_tiempo("Chile", a_series),
-            serie_tiempo("Chile", b_series),
-        )
-    print(hover_data)
-    country = hover_data["points"][0]["hovertext"]
-    return (
-        serie_tiempo(country, a_series),
-        serie_tiempo(country, b_series),
-    )
+def update_text(selection):
+    paises = [point["hovertext"] for point in selection["points"]]
+    datos = gapminder[gapminder.country.isin(paises)]
+    return px.line(datos, x="year", y="gdpPercap", color="country")
